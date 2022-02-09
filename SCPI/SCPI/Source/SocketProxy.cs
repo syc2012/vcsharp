@@ -162,10 +162,6 @@ namespace SCPI
 
             return result;
         }
-
-
-
-    
-    
     }
 }
+

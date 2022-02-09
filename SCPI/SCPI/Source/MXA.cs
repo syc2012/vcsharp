@@ -15,23 +15,23 @@ using SCPI;
 
 namespace SCPI
 {
-	public class MXA
-	{
+    public class MXA
+    {
         private Form1 m_form = null;
         private SocketProxy m_socketProxy = null;
 
         public MXA(Form1 form)
-		{
+        {
             m_socketProxy = new SocketProxy();
             m_form = form;
-		}
+        }
 
         public bool ConnectLAN(string ip, string port)
         {
             m_form.ConsolePrint("MXA  " + ip + " " + port + "\r\n");
 
             m_socketProxy.Connect(ip, port);
-            if( m_socketProxy._isConnected )
+            if ( m_socketProxy._isConnected )
             {
                 m_form.ConsolePrint("MXA connected throufh LAN: " + m_socketProxy.GetModelName() + "\r\n\r\n");
                 return true;
@@ -59,7 +59,7 @@ namespace SCPI
         }
 
         public void Reset()
-		{
+        {
             proxySend(":INST SA;*WAI");
             Thread.Sleep(100);
             proxySend("FREQ:SPAN 1MHz");
@@ -72,8 +72,8 @@ namespace SCPI
             Thread.Sleep(100);
         }
 
-		public void SetFreq(uint freq, int reflevel)
-		{
+        public void SetFreq(uint freq, int reflevel)
+        {
             double sampleFreq = 3932.16;
             double offset = 0;
 
@@ -103,7 +103,8 @@ namespace SCPI
 
             proxySend("CALC:MARK1:MAX");
             Thread.Sleep(100);
-            for (; i < 10; i++)
+
+            for (; i<10; i++)
             {
                 result += Convert.ToDouble(proxyQuery("CALC:MARK1:Y?"));
                 //Thread.Sleep(100);
@@ -111,7 +112,6 @@ namespace SCPI
 
             return (result/10);
         }
-
-	}
+    }
 }
 

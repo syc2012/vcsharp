@@ -16,36 +16,36 @@ using SCPI;
 
 namespace SCPI
 {
-	public class MXG
-	{
+    public class MXG
+    {
         private Form1 m_form = null;
         private SocketProxy m_socketProxy = null;
 
         public MXG(Form1 form)
-		{
+        {
             m_socketProxy = new SocketProxy();
             m_form = form;
-		}
+        }
 
-		public bool ConnectLAN(string ip, string port)
-		{
+        public bool ConnectLAN(string ip, string port)
+        {
             m_form.ConsolePrint("MXG  " + ip + " " + port + "\r\n");
 
             m_socketProxy.Connect(ip, port);
-            if (m_socketProxy._isConnected)
+            if ( m_socketProxy._isConnected )
             {
                 m_form.ConsolePrint("MXG connected throufh LAN: " + m_socketProxy.GetModelName() + "\r\n\r\n");
                 return true;
             }
 
             return false;
-		}
+        }
 
-		public void DisconnectLAN()
-		{
+        public void DisconnectLAN()
+        {
             //proxySend("CALC:MARK1:FCO OFF");
             m_socketProxy.Close();
-		}
+        }
 
         public void proxySend(string cmd)
         {
@@ -59,8 +59,8 @@ namespace SCPI
             //Thread.Sleep(200);
         }
 
-		public void Reset()
-		{
+        public void Reset()
+        {
             //proxySend(":INST SA;*WAI");
             //Thread.Sleep(200);
 
@@ -76,14 +76,13 @@ namespace SCPI
         }
 
         public void SetFreq(uint freq, double output)
-		{
+        {
             proxySend("OUTP:STAT OFF");
             proxySend(string.Format("FREQ {0} MHz", freq));
             proxySend(":OUTPut:MODulation:STATe ON");
             proxySend("OUTP:STAT ON");
             proxySend(string.Format("POW:AMPL {0} dBm", output));
         }
-
-	}
+    }
 }
 
