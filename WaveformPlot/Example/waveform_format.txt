@@ -1,0 +1,6 @@
+/* 16-bit IQ data */
+typedef struct _tIQ16
+{
+    signed short real;
+    signed short imag;
+} tIQ16;
