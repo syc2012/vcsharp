@@ -43,6 +43,12 @@ namespace WaveformPlot
             byte[] data = File.ReadAllBytes( fileName );
             Int32 samples = 0;
 
+            if (data.Length < 4)
+            {
+                MessageBox.Show("Wrong data length: " + data.Length.ToString());
+                return;
+            }
+
             chartWav.Series[0].Points.Clear();
             chartWav.ChartAreas[0].AxisX.LabelStyle.Format = "N0";
 
