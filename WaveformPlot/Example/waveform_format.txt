@@ -1,6 +1,28 @@
-/* 16-bit IQ data */
-typedef struct _tIQ16
+/* 16-bit integer IQ data */
+typedef struct _tIQint16
 {
     signed short real;
     signed short imag;
-} tIQ16;
+} tIQint16;
+
+
+/* 64-bit double IQ data */
+typedef struct _tIQdouble
+{
+    double real;
+    double imag;
+} tIQdouble;
+
+
+/* 32-bit float signals */
+typedef struct _tSIGfloat
+{
+    float real;
+} tSIGfloat;
+
+
+/* 64-bit double signals */
+typedef struct _tSIGdouble
+{
+    double real;
+} tSIGdouble;

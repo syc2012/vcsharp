@@ -10,6 +10,14 @@ using System.Windows.Forms;
 
 namespace WaveformPlot
 {
+    public enum FORMAT
+    {
+        tIQint16,
+        tIQdouble,
+        tSIGfloat,
+        tSIGdouble
+    }
+
     public partial class FormPlot : Form
     {
         private Rectangle orgFormSize;
@@ -20,25 +28,73 @@ namespace WaveformPlot
         {
             InitializeComponent();
 
+            comboBoxFormat.Items.Add("16-bit integer IQ data");
+            comboBoxFormat.Items.Add("64-bit double IQ data");
+            comboBoxFormat.Items.Add("32-bit float signals");
+            comboBoxFormat.Items.Add("64-bit double signals");
+            comboBoxFormat.SelectedIndex = 0;
+
             chartWav.ChartAreas[0].AxisX.MajorGrid.LineWidth = 0;
             chartWav.ChartAreas[0].AxisY.MajorGrid.LineWidth = 0;
         }
 
-        private void PlotWaveform(string fileName)
+        private void PlotWaveform(string fileName, FORMAT format)
         {
             byte[] data = File.ReadAllBytes( fileName );
-            Int32 samples = data.Length / 4;
-            if (samples > 1600000) samples = 1600000;
+            Int32 samples = 0;
 
             chartWav.Series[0].Points.Clear();
             chartWav.ChartAreas[0].AxisX.LabelStyle.Format = "N0";
-            chartWav.ChartAreas[0].AxisY.LabelStyle.Format = "N0";
 
-            for (Int32 i = 0; i < samples; i++)
+            switch ( format )
             {
-                Int32 x = i + 1;
-                Int16 y = System.BitConverter.ToInt16(data, (i * 4));
-                chartWav.Series[0].Points.AddXY(x, y);
+                case FORMAT.tIQint16:
+                    chartWav.ChartAreas[0].AxisY.LabelStyle.Format = "N0";
+                    samples = data.Length / 4;
+                    if (samples > 1600000) samples = 1600000;
+                    for (Int32 i = 0; i < samples; i++)
+                    {
+                        Int32 x = i + 1;
+                        Int16 y = System.BitConverter.ToInt16(data, (i * 4));
+                        chartWav.Series[0].Points.AddXY(x, y);
+                    }
+                    break;
+                case FORMAT.tIQdouble:
+                    chartWav.ChartAreas[0].AxisY.LabelStyle.Format = "N3";
+                    samples = data.Length / 16;
+                    if (samples > 1600000) samples = 1600000;
+                    for (Int32 i = 0; i < samples; i++)
+                    {
+                        Int32 x = i + 1;
+                        double y = System.BitConverter.ToDouble(data, (i * 16));
+                        chartWav.Series[0].Points.AddXY(x, y);
+                    }
+                    break;
+                case FORMAT.tSIGfloat:
+                    chartWav.ChartAreas[0].AxisY.LabelStyle.Format = "N3";
+                    samples = data.Length / 4;
+                    if (samples > 1600000) samples = 1600000;
+                    for (Int32 i = 0; i < samples; i++)
+                    {
+                        Int32 x = i + 1;
+                        float y = System.BitConverter.ToSingle(data, (i * 4));
+                        chartWav.Series[0].Points.AddXY(x, y);
+                    }
+                    break;
+                case FORMAT.tSIGdouble:
+                    chartWav.ChartAreas[0].AxisY.LabelStyle.Format = "N3";
+                    samples = data.Length / 8;
+                    if (samples > 1600000) samples = 1600000;
+                    for (Int32 i = 0; i < samples; i++)
+                    {
+                        Int32 x = i + 1;
+                        double y = System.BitConverter.ToDouble(data, (i * 8));
+                        chartWav.Series[0].Points.AddXY(x, y);
+                    }
+                    break;
+                default:
+                    MessageBox.Show("Wrong waveform format: " + format.ToString());
+                    break;
             }
         }
 
@@ -55,7 +111,8 @@ namespace WaveformPlot
                     Cursor.Current = Cursors.WaitCursor;
 
                     textBoxFile.Text = dlg.FileName;
-                    PlotWaveform(dlg.FileName);
+                    int index = comboBoxFormat.SelectedIndex;
+                    PlotWaveform(dlg.FileName, (FORMAT)index);
 
                     Cursor.Current = Cursors.Default;
                 }
@@ -75,9 +132,6 @@ namespace WaveformPlot
             float yRatio = (float)(this.Size.Height) / (float)(orgFormSize.Height);
             int newWidth;
             int newHeight;
-
-            //newWidth = (int)(orgTextBoxSize.Width * xRatio);
-            //textBoxFile.Size = new Size(newWidth, orgTextBoxSize.Height);
 
             newWidth = (int)(orgChartSize.Width * xRatio);
             newHeight = (int)(orgChartSize.Height * yRatio);
