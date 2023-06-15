@@ -43,9 +43,10 @@ namespace WaveformPlot
             byte[] data = File.ReadAllBytes( fileName );
             Int32 samples = 0;
 
-            if (data.Length < 4)
+            if (data.Length < 16)
             {
                 MessageBox.Show("Wrong data length: " + data.Length.ToString());
+                data = null;
                 return;
             }
 
@@ -102,6 +103,7 @@ namespace WaveformPlot
                     MessageBox.Show("Wrong waveform format: " + format.ToString());
                     break;
             }
+            data = null;
         }
 
         private void buttonFile_Click(object sender, EventArgs e)
