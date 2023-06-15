@@ -108,22 +108,22 @@ namespace WaveformPlot
 
         private void buttonFile_Click(object sender, EventArgs e)
         {
-            using (OpenFileDialog dlg = new OpenFileDialog())
+            OpenFileDialog dlg = new OpenFileDialog();
+
+            dlg.Title = "Select file";
+            dlg.InitialDirectory = ".\\";
+            dlg.Filter = "Binary files (*.bin)|*.bin|All files (*.*)|*.*";
+            dlg.RestoreDirectory = true;
+            
+            if (dlg.ShowDialog() == DialogResult.OK)
             {
-                dlg.Title = "Select file";
-                dlg.InitialDirectory = ".\\";
-                dlg.Filter = "Binary files (*.bin)|*.bin|All files (*.*)|*.*";
-                dlg.RestoreDirectory = true;
-                if (dlg.ShowDialog() == DialogResult.OK)
-                {
-                    Cursor.Current = Cursors.WaitCursor;
+                Cursor.Current = Cursors.WaitCursor;
 
-                    textBoxFile.Text = dlg.FileName;
-                    int index = comboBoxFormat.SelectedIndex;
-                    PlotWaveform(dlg.FileName, (FORMAT)index);
+                textBoxFile.Text = dlg.FileName;
+                int index = comboBoxFormat.SelectedIndex;
+                PlotWaveform(dlg.FileName, (FORMAT)index);
 
-                    Cursor.Current = Cursors.Default;
-                }
+                Cursor.Current = Cursors.Default;
             }
         }
 
